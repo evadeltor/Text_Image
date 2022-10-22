@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
 import pandas as pd
-
+st.title("Short Description Image Generator")
+st.markdown("From a short description and based on the database from MagicPrompt-Stable-Diffusion from HuggingFace + the API of StableDiffusion; images can be created based on few words; and the algorithm is in charge of adding a more detailed description")
 word = st.text_input('Short image description', '')
 
 import requests
@@ -27,7 +28,7 @@ if do_image:
 
     key, value = list(output[0].items())[0]
     output = value
-    st.write(output)
+    st.write("Generated text:  ", output)
 
     import getpass, os
 
@@ -68,7 +69,7 @@ if do_image:
                     "Please modify the prompt and try again.")
             if artifact.type == generation.ARTIFACT_IMAGE:
                 img = Image.open(io.BytesIO(artifact.binary))
-                st.image(img, caption='Sunrise by the mountains')
+                st.image(img, caption='Image generated')
 
 
 

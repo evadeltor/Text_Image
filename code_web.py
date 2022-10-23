@@ -38,6 +38,7 @@ if do_image:
     key = st.text_input('Add your DreamStudio API Key', '')
     st.markdown("For having your API key visit: https://beta.dreamstudio.ai/membership ")
     st.markdown("Otherwise you can add the obtained prompt manually to https://huggingface.co/spaces/stabilityai/stable-diffusion ")
+    st.markdown(" 📌 Have you been using this app before? All the generated images have been paid to the DreamStudio app by me. If you have enjoyet it and you want to invite me to a coffe you can do it here: https://paypal.me/evadeltor?country.x=ES&locale.x=es_ES")
     # To get your API key, visit https://beta.dreamstudio.ai/membership
     if len(key) > 0:
         have_key = True

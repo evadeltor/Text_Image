@@ -35,39 +35,47 @@ if do_image:
     # NB: host url is not prepended with \"https\" nor does it have a trailing slash.
     os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
 
+    key = st.text_input('Add your DreamStudio API Key', '')
+    st.markdown("For having your API key visit: https://beta.dreamstudio.ai/membership ")
+    st.markdown("Otherwise you can add the obtained prompt manually to https://huggingface.co/spaces/stabilityai/stable-diffusion ")
     # To get your API key, visit https://beta.dreamstudio.ai/membership
-    os.environ['STABILITY_KEY'] = "sk-YntvOaDTrTZt4t5LTz0bszZeGcgJVZia2vlbohGM7p6ji0GH"
-    import io
-    import os
-    import warnings
+    if len(key) > 0:
+        have_key = True
+    else:
+        have_key = False
+    if have_key:
+        os.environ['STABILITY_KEY'] = str(key)
+        import io
+        import os
+        import warnings
 
-    from stability_sdk import client
-    import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
-
-
-    stability_api = client.StabilityInference(
-        key=os.environ['STABILITY_KEY'],
-        verbose=True,
-    )
-
-    # the object returned is a python generator
-    answers = stability_api.generate(
-        prompt=output
-    )
-
-    from PIL import Image
+        from stability_sdk import client
+        import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 
 
-    # iterating over the generator produces the api response
-    for resp in answers:
-        for artifact in resp.artifacts:
-            if artifact.finish_reason == generation.FILTER:
-                warnings.warn(
-                    "Your request activated the API's safety filters and could not be processed."
-                    "Please modify the prompt and try again.")
-            if artifact.type == generation.ARTIFACT_IMAGE:
-                img = Image.open(io.BytesIO(artifact.binary))
-                st.image(img, caption='Image generated')
+        stability_api = client.StabilityInference(
+            key=os.environ['STABILITY_KEY'],
+            verbose=True,
+        )
+
+        # the object returned is a python generator
+        answers = stability_api.generate(
+            prompt=output
+        )
+
+        from PIL import Image
+
+
+        # iterating over the generator produces the api response
+        for resp in answers:
+            for artifact in resp.artifacts:
+                if artifact.finish_reason == generation.FILTER:
+                    warnings.warn(
+                        "Your request activated the API's safety filters and could not be processed."
+                        "Please modify the prompt and try again.")
+                if artifact.type == generation.ARTIFACT_IMAGE:
+                    img = Image.open(io.BytesIO(artifact.binary))
+                    st.image(img, caption='Image generated')
 
 
 
